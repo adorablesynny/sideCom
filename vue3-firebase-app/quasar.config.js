@@ -44,7 +44,7 @@ module.exports = configure(function (/* ctx */) {
         node: 'node20',
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -72,8 +72,10 @@ module.exports = configure(function (/* ctx */) {
               { src: 'src/docs', path: 'docs' },
             ],
             exclude: ['**/components/**'],
+            debug: true,
           },
         ],
+        ['vite-plugin-vue-layouts', {}],
       ],
     },
 
