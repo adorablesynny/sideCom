@@ -8,7 +8,7 @@
 
     <q-item-section>
       <div class="flex items-center">
-        <span>닉네임&nbsp;&middot;&nbsp;3일 전</span>
+        <span>김단감&nbsp;&middot;&nbsp;3일 전</span>
         <q-chip
           class="q-ml-smw"
           color="primary"
@@ -26,41 +26,37 @@
       <div class="row items-center" style="height: 27px">
         <div class="col-3">
           <div class="flex flex-center">
-            <q-btn class="full-width" flat dense>
-              <q-icon name="sym_o_visibility" color="grey" size="xs"></q-icon>
-              <span class="text-grey q-ml-xs text-body3">{{ readCount }}</span>
-              <q-tooltip :offset="[0, 4]">조회수</q-tooltip>
-            </q-btn>
+            <PostIcon
+              name="sym_o_visibility"
+              :label="readCount"
+              tooltip="조회수"
+            />
           </div>
         </div>
         <div class="col-3">
           <div class="flex flex-center">
-            <q-btn class="full-width" flat dense>
-              <q-icon name="sym_o_sms" color="grey" size="xs"></q-icon>
-              <span class="text-grey q-ml-xs text-body3">{{
-                commentCount
-              }}</span>
-              <q-tooltip :offset="[0, 4]">댓글수</q-tooltip>
+            <PostIcon name="sym_o_sms" :label="commentCount" tooltip="댓글수" />
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="flex flex-center">
+            <q-btn class="full-width" flat dense @click.prevent>
+              <PostIcon
+                name="sym_o_favorite"
+                :label="likeCount"
+                tooltip="좋아요"
+              />
             </q-btn>
           </div>
         </div>
         <div class="col-3">
           <div class="flex flex-center">
             <q-btn class="full-width" flat dense @click.prevent>
-              <q-icon name="sym_o_favorite" color="grey" size="xs"></q-icon>
-              <span class="text-grey q-ml-xs text-body3">{{ likeCount }}</span>
-              <q-tooltip :offset="[0, 4]">좋아요</q-tooltip>
-            </q-btn>
-          </div>
-        </div>
-        <div class="col-3">
-          <div class="flex flex-center">
-            <q-btn class="full-width" flat dense @click.prevent>
-              <q-icon name="sym_o_bookmark" color="grey" size="xs"></q-icon>
-              <span class="text-grey q-ml-xs text-body3">{{
-                bookmarkCount
-              }}</span>
-              <q-tooltip :offset="[0, 4]">북마크</q-tooltip>
+              <PostIcon
+                name="sym_o_bookmark"
+                :label="bookmarkCount"
+                tooltip="북마크"
+              />
             </q-btn>
           </div>
         </div>
@@ -70,6 +66,9 @@
 </template>
 
 <script setup>
+/* 컴포넌트 */
+import PostIcon from './PostIcon.vue';
+
 const props = defineProps({
   title: String,
   id: Number,
