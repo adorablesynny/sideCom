@@ -13,7 +13,7 @@
         ></q-btn>
         <div class="flex justify-between">
           <q-btn
-            @click="$emit('changeView', 'FindPassWordForm')"
+            @click="$emit('changeView', 'FindPasswordForm')"
             label="비밀번호 찾기"
             flat
             dense

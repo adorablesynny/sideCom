@@ -1,22 +1,46 @@
 <template>
   <q-page padding>
-    <div class="text-h4">커뮤니티 목록</div>
-    <section class="q-gutter-y-sm q-mt-lg">
-      <q-card v-for="id in 30" :key="id" @click="goPostDetails(id)">
-        <q-card-section class="cursorP">{{ id }} 게시글</q-card-section>
-      </q-card>
-    </section>
+    <div class="row q-col-gutter-x-lg">
+      <PostLeftBar class="col-grow" />
+
+      <section class="col-7">
+        <PostHeader />
+        <PostList :items="posts" />
+      </section>
+
+      <PostRightBar class="col-3" />
+    </div>
   </q-page>
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router';
 
+/* 컴포너트  */
+import PostList from '../components/apps/post/PostList.vue';
+import PostHeader from './components/PostHeader.vue';
+import PostLeftBar from './components/PostLeftBar.vue';
+import PostRightBar from './components/PostRightBar.vue';
+
 const router = useRouter();
 
 const goPostDetails = id => {
   router.push(`/posts/${id}`);
 };
+
+const posts = Array.from(Array(20), (_, index) => ({
+  id: index + 1,
+  title: 'Vue3 Firebase 강의 ✏️',
+  content:
+    'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus quisquam excepturi vitae tempore error nobis asperiores, alias dignissimos aut perspiciatis velit impedit ipsa assumenda, ea saepe, ratione cumque quis expedita.',
+  readCount: 15,
+  commentCount: 1,
+  likeCount: 3,
+  bookmarkCount: 5,
+  category: '카테고리' + index,
+  tags: ['html', 'css', 'javaSciprt'],
+  uid: '김단감',
+}));
 </script>
 
 <style lang="scss" scoped></style>
