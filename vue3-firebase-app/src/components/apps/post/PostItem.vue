@@ -71,7 +71,7 @@ import PostIcon from './PostIcon.vue';
 
 const props = defineProps({
   title: String,
-  id: Number,
+  id: [Number, String],
   content: String,
   readCount: {
     type: Number,

@@ -19,15 +19,11 @@
 </template>
 
 <script setup>
+import { getCategories } from 'src/service/category.js';
 /* 컴포넌트 */
 import StickyHideBar from '../../components/StickyHideBar.vue';
 
-const categories = [
-  { label: 'Q&A', value: 'qna' },
-  { label: '커뮤니티', value: 'community' },
-  { label: '공지사항', value: 'notice' },
-  { label: '강의', value: 'lecture' },
-];
+const categories = getCategories();
 </script>
 
 <style lang="scss" scoped></style>

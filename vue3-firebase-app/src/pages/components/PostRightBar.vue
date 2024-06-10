@@ -10,7 +10,9 @@
       <q-avatar class="q-mr-sm" color="white" text-color="primary" size="22px">
         <q-icon name="edit" size="14px"></q-icon>
       </q-avatar>
-      <span class="text-weight-bold">새 포스트 작성하기</span>
+      <span @click="$emit('openWriteDialog')" class="text-weight-bold"
+        >새 포스트 작성하기</span
+      >
     </q-btn>
 
     <q-card class="q-mt-md bg-grey-1" bordered flat>
@@ -69,6 +71,8 @@ const tags = ref([
   { name: 'html', count: 3 },
   { name: 'css', count: 12 },
 ]);
+
+defineEmits(['openWriteDialog']);
 </script>
 
 <style lang="scss" scoped></style>

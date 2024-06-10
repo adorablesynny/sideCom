@@ -9,7 +9,7 @@
 <script setup>
 const props = defineProps({
   name: String,
-  label: String,
+  label: [String, Number],
   tooltip: String,
 });
 </script>

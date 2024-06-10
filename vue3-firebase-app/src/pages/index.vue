@@ -8,19 +8,22 @@
         <PostList :items="posts" />
       </section>
 
-      <PostRightBar class="col-3" />
+      <PostRightBar class="col-3" @open-write-dialog="openWriteDialog" />
     </div>
+    <PostWriteDialog v-model="postDialog" />
   </q-page>
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 
 /* 컴포너트  */
 import PostList from '../components/apps/post/PostList.vue';
 import PostHeader from './components/PostHeader.vue';
 import PostLeftBar from './components/PostLeftBar.vue';
 import PostRightBar from './components/PostRightBar.vue';
+import PostWriteDialog from '../components/apps/post/PostWriteDialog.vue';
 
 const router = useRouter();
 
@@ -41,6 +44,11 @@ const posts = Array.from(Array(20), (_, index) => ({
   tags: ['html', 'css', 'javaSciprt'],
   uid: '김단감',
 }));
+
+const postDialog = ref(false);
+const openWriteDialog = () => {
+  postDialog.value = true;
+};
 </script>
 
 <style lang="scss" scoped></style>
