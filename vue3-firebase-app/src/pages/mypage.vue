@@ -1,21 +1,39 @@
 <template>
-  <div>
-    <div class="text-h2">마이페이지 💕</div>
-    <ul>
-      <li>
-        <router-link to="/mypage/profile">프로필로 이동</router-link>
-      </li>
-      <li>
-        <router-link to="/mypage/password">패스워드 변경</router-link>
-      </li>
-      <li>
-        <router-link to="/mypage/bookmark">북마크로 이동</router-link>
-      </li>
-    </ul>
-    <router-view></router-view>
-  </div>
+  <q-page padding>
+    <div class="row q-col-gutter-lg">
+      <div class="col-4">
+        <BaseCard>
+          <q-list bordered separator>
+            <q-item clickable v-ripple to="/mypage/profile">
+              <q-item-section avatar>
+                <q-icon name="sym_o_account_circle"></q-icon>
+              </q-item-section>
+              <q-item-section>프로필</q-item-section>
+            </q-item>
+            <q-item clickable v-ripple to="/mypage/password">
+              <q-item-section avatar>
+                <q-icon name="sym_o_lock"></q-icon>
+              </q-item-section>
+              <q-item-section>비밀번호 변경</q-item-section>
+            </q-item>
+            <q-item clickable v-ripple to="/mypage/bookmark">
+              <q-item-section avatar>
+                <q-icon name="sym_o_bookmark"></q-icon>
+              </q-item-section>
+              <q-item-section>북마크</q-item-section>
+            </q-item>
+          </q-list>
+        </BaseCard>
+      </div>
+      <div class="col-8">
+        <router-view></router-view>
+      </div>
+    </div>
+  </q-page>
 </template>
 
-<script setup></script>
+<script setup>
+import BaseCard from 'src/components/base/BaseCard.vue';
+</script>
 
 <style lang="scss" scoped></style>
