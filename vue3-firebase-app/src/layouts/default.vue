@@ -76,11 +76,14 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useQuasar } from 'quasar';
 import { useAuthStore } from '../stores/auth';
 import { getenrateDefaultPhotoURL, logout } from '../service/auth';
 /* 컴포넌트 */
 import AuthDialog from '../components/auth/AuthDialog.vue';
 import { auth } from '../boot/firebase';
+
+const $q = useQuasar();
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -97,5 +100,6 @@ const openAuthDialog = () => {
 
 const handleLogout = async () => {
   await logout();
+  $q.notify('다음에 또 만나요. 🤚');
 };
 </script>

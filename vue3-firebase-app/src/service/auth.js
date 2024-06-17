@@ -1,6 +1,7 @@
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
   updatePassword,
@@ -14,8 +15,8 @@ const DEFAULT_PHOTO_URL =
 //로그인
 export async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
-  const result = await signInWithPopup(auth, provider);
-  console.log('user: ', result.user);
+  const { user } = await signInWithPopup(auth, provider);
+  return user;
 }
 
 export async function logout() {
@@ -33,4 +34,9 @@ export async function signUpWithEamil({ email, password, nickname }) {
 
 export function getenrateDefaultPhotoURL(uid) {
   return `${DEFAULT_PHOTO_URL}${uid}`;
+}
+
+export async function signInWithEmail({ email, password }) {
+  const { user } = await signInWithEmailAndPassword(auth, email, password);
+  return user;
 }

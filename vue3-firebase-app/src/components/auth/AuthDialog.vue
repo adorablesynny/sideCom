@@ -25,6 +25,7 @@
         <FindPasswordForm @change-view="changeViewMode" v-else /> -->
         <!-- 동적 컴포넌트 -->
         <component
+          @close-dialog="closeDialog"
           :is="authViewComponents[viewMode]"
           @change-view="changeViewMode"
         ></component>
@@ -62,6 +63,10 @@ const authViewComponents = {
   FindPasswordForm: defineAsyncComponent(() =>
     import('./FindPasswordForm.vue'),
   ),
+};
+
+const closeDialog = () => {
+  emits('update:modelValue', false);
 };
 </script>
 
