@@ -44,7 +44,12 @@
         ></q-btn>
         <q-btn v-else-if="authStore.isAuthenticated" round flat>
           <q-avatar>
-            <img :src="authStore.user.photoURL" />
+            <img
+              :src="
+                authStore.user.photoURL ||
+                getenrateDefaultPhotoURL(authStore.user.uid)
+              "
+            />
           </q-avatar>
           <q-menu>
             <q-list style="min-width: 100px">
@@ -72,9 +77,10 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
-import { logout } from '../service/auth';
+import { getenrateDefaultPhotoURL, logout } from '../service/auth';
 /* 컴포넌트 */
 import AuthDialog from '../components/auth/AuthDialog.vue';
+import { auth } from '../boot/firebase';
 
 const route = useRoute();
 const authStore = useAuthStore();
