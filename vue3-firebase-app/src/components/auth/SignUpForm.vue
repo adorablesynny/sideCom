@@ -3,21 +3,39 @@
     <div class="text-h5 text-center text-weight-bold q-mb-xl">회원가입</div>
     <q-form class="q-gutter-y-md" @submit.prevent="handleSubmit">
       <q-input
+        :rules="[validateRequired]"
         v-model="form.nickname"
         placeholder="닉네임"
         outlined
+        hide-bottom-space
         dense
       ></q-input>
       <q-input
+        :rules="[validateRequired, validateEmail]"
         v-model="form.email"
         placeholder="이메일"
+        hide-bottom-space
         outlined
         dense
       ></q-input>
       <q-input
+        :rules="[validateRequired, validatePassword]"
         v-model="form.password"
         type="password"
         placeholder="비밀번호(문자, 숫자조합 8자 이상)"
+        hide-bottom-space
+        outlined
+        dense
+      ></q-input>
+      <q-input
+        :rules="[
+          validateRequired,
+          val => validatePasswordConfirm(form.password, val),
+        ]"
+        v-model="passwordConfirm"
+        type="password"
+        placeholder="비밀번호 확인"
+        hide-bottom-space
         outlined
         dense
       ></q-input>
@@ -46,6 +64,12 @@
 import { ref } from 'vue';
 import { signUpWithEamil } from '../../service';
 import { useQuasar } from 'quasar';
+import {
+  validateEmail,
+  validateRequired,
+  validatePassword,
+  validatePasswordConfirm,
+} from '../../utils/validate-rules';
 
 // import { signUpWithEamil } from '../../service/auth';
 
@@ -58,6 +82,7 @@ const form = ref({
   email: '',
   password: '',
 });
+const passwordConfirm = ref('');
 
 const handleSubmit = async () => {
   await signUpWithEamil(form.value);

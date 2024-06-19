@@ -11,6 +11,7 @@
           label="새로운 비밀번호"
         ></q-input>
         <q-input
+          :rules="[validatePasswordConfirm]"
           type="password"
           v-model="newPasswordConfirm"
           outlined
@@ -37,6 +38,7 @@ import BaseCard from 'src/components/base/BaseCard.vue';
 import { ref } from 'vue';
 import { updateUserPassword } from '../../service';
 import { useQuasar } from 'quasar';
+import { validatePasswordConfirm } from '../../utils/validate-rules';
 
 const $q = useQuasar();
 
