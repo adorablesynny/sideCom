@@ -3,22 +3,20 @@
     <q-form @submit.prevent="handleSubmit">
       <q-card-section class="q-gutter-y-md">
         <div class="text-h6">비밀번호 변경</div>
-        <q-form class="q-gutter-y-md q-mt-md">
-          <q-input
-            type="password"
-            v-model="newPassword"
-            outlined
-            dense
-            label="새로운 비밀번호"
-          ></q-input>
-          <q-input
-            type="password"
-            v-model="newPasswordConfirm"
-            outlined
-            dense
-            label="새로운 비밀번호 확인"
-          ></q-input>
-        </q-form>
+        <q-input
+          type="password"
+          v-model="newPassword"
+          outlined
+          dense
+          label="새로운 비밀번호"
+        ></q-input>
+        <q-input
+          type="password"
+          v-model="newPasswordConfirm"
+          outlined
+          dense
+          label="새로운 비밀번호 확인"
+        ></q-input>
       </q-card-section>
       <q-separator></q-separator>
       <q-card-actions>
