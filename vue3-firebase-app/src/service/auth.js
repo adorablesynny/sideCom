@@ -45,3 +45,7 @@ export async function signInWithEmail({ email, password }) {
 export async function sendPasswordReset(email) {
   await sendPasswordResetEmail(auth, email);
 }
+
+export async function updateUserPassword(newPassword) {
+  await updatePassword(auth.currentUser, newPassword);
+}
