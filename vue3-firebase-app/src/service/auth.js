@@ -1,6 +1,7 @@
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -30,7 +31,7 @@ export async function signUpWithEamil({ email, password, nickname }) {
     displayName: nickname,
     photoURL: getenrateDefaultPhotoURL(user.uid),
   });
-  console.log('useruser', user);
+  sendVerificationEamil();
 }
 
 export function getenrateDefaultPhotoURL(uid) {
@@ -48,4 +49,8 @@ export async function sendPasswordReset(email) {
 
 export async function updateUserPassword(newPassword) {
   await updatePassword(auth.currentUser, newPassword);
+}
+
+export async function sendVerificationEamil() {
+  await sendEmailVerification(auth.currentUser);
 }
