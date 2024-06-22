@@ -1,0 +1,5 @@
+{
+  "auth/invalid-email": "유효한 이메일을 입력해주세요.",
+  "auth/missing-password": "비밀번호를 입력해주세요.",
+  "auth/wrong-password": "비밀번호가 유효하지 않습니다."
+}
