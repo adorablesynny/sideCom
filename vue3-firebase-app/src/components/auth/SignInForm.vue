@@ -91,7 +91,10 @@ const handleSignInEmail = async () => {
     emits('closeDialog');
   } catch (err) {
     error.value = err;
-    $q.notify('유효한 이메일을 입력해주세요. 🥲');
+    $q.notify({
+      type: 'negative',
+      message: '유효한 이메일을 입력해주세요. 🥲',
+    });
   } finally {
     isLoading.value = false;
   }
