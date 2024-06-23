@@ -59,6 +59,7 @@
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
 import { signInWithEmail, signInWithGoogle } from '../../service/auth';
+import { useAsyncState } from '@vueuse/core';
 
 /* 컴포넌트 */
 import DisplayError from '../DisplayError.vue';
@@ -67,8 +68,26 @@ const emits = defineEmits(['changeView', 'closeDialog']);
 
 const $q = useQuasar();
 
-const isLoading = ref(false);
-const error = ref(null);
+// const isLoading = ref(false);
+// const error = ref(null);
+
+const { isLoading, error, execute } = useAsyncState(signInWithEmail, null, {
+  immediate: false,
+  // throwError: true,
+  onSuccess: () => {
+    isLoading.value = true;
+    $q.notify('이메일로 다시 돌아오셨네요! 반가워요. 💕');
+    emits('closeDialog');
+  },
+  onError: err => {
+    $q.notify({
+      type: 'negative',
+      message: '입력한 정보를 확인해주세요. 🥲',
+    });
+  },
+});
+
+const handleSignInEmail = () => execute(1000, form.value);
 
 // 로그인 (구글)
 const handleSignInGoogle = async () => {
@@ -83,22 +102,22 @@ const form = ref({
   password: '',
 });
 
-const handleSignInEmail = async () => {
-  try {
-    isLoading.value = true;
-    await signInWithEmail(form.value);
-    $q.notify('이메일로 다시 돌아오셨네요! 반가워요. 💕');
-    emits('closeDialog');
-  } catch (err) {
-    error.value = err;
-    $q.notify({
-      type: 'negative',
-      message: '유효한 이메일을 입력해주세요. 🥲',
-    });
-  } finally {
-    isLoading.value = false;
-  }
-};
+// const handleSignInEmail = async () => {
+//   try {
+//     isLoading.value = true;
+//     await signInWithEmail(form.value);
+//     $q.notify('이메일로 다시 돌아오셨네요! 반가워요. 💕');
+//     emits('closeDialog');
+//   } catch (err) {
+//     error.value = err;
+//     $q.notify({
+//       type: 'negative',
+//       message: '유효한 이메일을 입력해주세요. 🥲',
+//     });
+//   } finally {
+//     isLoading.value = false;
+//   }
+// };
 </script>
 
 <style lang="scss" scoped></style>

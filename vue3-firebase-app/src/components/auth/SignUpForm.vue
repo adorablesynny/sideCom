@@ -46,6 +46,7 @@
         class="full-width"
         unelevated
         color="primary"
+        :loading="isLoading"
       ></q-btn>
 
       <q-separator />
@@ -64,12 +65,15 @@
 import { ref } from 'vue';
 import { signUpWithEamil } from '../../service';
 import { useQuasar } from 'quasar';
+
 import {
   validateEmail,
   validateRequired,
   validatePassword,
   validatePasswordConfirm,
 } from '../../utils/validate-rules';
+import { useAsyncState } from '@vueuse/core';
+import { getErrorMessage } from '../../utils/firebase/error-message';
 
 // import { signUpWithEamil } from '../../service/auth';
 
@@ -84,12 +88,30 @@ const form = ref({
 });
 const passwordConfirm = ref('');
 
-const handleSubmit = async () => {
-  await signUpWithEamil(form.value);
-  $q.notify('가입을 환영합니다. 💘');
-  $q.notify('이메일에서 인증 링크를 확인해주세요. 🤭');
-  emits('closeDialog');
+const { isLoading, execute } = useAsyncState(signUpWithEamil, null, {
+  immediate: false,
+  onSuccess: () => {
+    $q.notify('가입을 환영합니다. 💘');
+    $q.notify('이메일에서 인증 링크를 확인해주세요. 🤭');
+    emits('closeDialog');
+  },
+  onError: err => {
+    $q.notify({
+      type: 'negaitve',
+      message: getErrorMessage(err.code),
+    });
+  },
+});
+
+const handleSubmit = () => {
+  execute(1000, form.value);
 };
+// const handleSubmit = async () => {
+//   await signUpWithEamil(form.value);
+//   $q.notify('가입을 환영합니다. 💘');
+//   $q.notify('이메일에서 인증 링크를 확인해주세요. 🤭');
+//   emits('closeDialog');
+// };
 </script>
 
 <style lang="scss" scoped></style>
