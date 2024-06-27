@@ -1,13 +1,21 @@
 <template>
-  <q-form>
+  <q-form @submit.prevent="handleSubmit">
     <q-card-section class="q-gutter-y-sm">
-      <q-input v-model="titleModel" outlined placeholder="제목" />
+      <q-input
+        v-model="titleModel"
+        outlined
+        placeholder="제목"
+        hide-bottom-space
+        :rules="[validateRequired]"
+      />
       <q-select
         v-model="categoryModel"
         outlined
         :options="categories"
         emit-value
         map-options
+        hide-bottom-space
+        :rules="[validateRequired]"
       >
         <template v-if="!categoryModel" #selected>
           <span class="text-grey-7">카테고리를 선택하세요.</span>
@@ -27,7 +35,13 @@
     <q-card-actions align="right">
       <slot name="actions">
         <q-btn flat label="취소하기" v-close-popup />
-        <q-btn type="submit" flat label="저장하기" color="primary" />
+        <q-btn
+          type="submit"
+          flat
+          label="저장하기"
+          color="primary"
+          :loading="loading"
+        />
       </slot>
     </q-card-actions>
   </q-form>
@@ -36,8 +50,11 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { getCategories } from 'src/service/category.js';
+import { validateRequired } from 'src/utils/validate-rules';
 import TiptapEditor from '../../../components/tiptap/TiptapEditor.vue';
+import { useQuasar } from 'quasar';
 
+const $q = useQuasar();
 const props = defineProps({
   title: {
     type: String,
@@ -52,6 +69,10 @@ const props = defineProps({
     type: Array,
     defaultl: () => [],
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emits = defineEmits([
@@ -59,6 +80,7 @@ const emits = defineEmits([
   'update:category',
   'update:content',
   'update:tags',
+  'submit',
 ]);
 
 const tagField = ref('');
@@ -81,6 +103,13 @@ const contentModel = computed({
 });
 
 const categories = getCategories();
+
+const handleSubmit = () => {
+  if (!contentModel.value) {
+    $q.notify('내용을 작성해주세요. 🥲');
+  }
+  emits('submit');
+};
 </script>
 
 <style lang="scss" scoped></style>
