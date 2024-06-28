@@ -26,10 +26,18 @@
         outlined
         placeholder="태그를 입력해주세요. 입력 후 Enter!"
         prefix="#"
+        @keypress.enter.prevent="addTag"
       />
-      <q-chip outline dense removable color="teal" @remove="removeTag"
-        >vuejs</q-chip
-      >
+      <q-chip
+        v-for="(tag, index) in tags"
+        :key="tag"
+        @remove="removeTag(index)"
+        outline
+        dense
+        removable
+        color="teal"
+        >{{ tag }}
+      </q-chip>
     </q-card-section>
     <q-separator />
     <q-card-actions align="right">
@@ -48,11 +56,12 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, toRef } from 'vue';
 import { getCategories } from 'src/service/category.js';
 import { validateRequired } from 'src/utils/validate-rules';
 import TiptapEditor from '../../../components/tiptap/TiptapEditor.vue';
 import { useQuasar } from 'quasar';
+import { useTag } from '../../../composables/useTag';
 
 const $q = useQuasar();
 const props = defineProps({
@@ -67,7 +76,7 @@ const props = defineProps({
   },
   tags: {
     type: Array,
-    defaultl: () => [],
+    default: () => [],
   },
   loading: {
     type: Boolean,
@@ -82,10 +91,6 @@ const emits = defineEmits([
   'update:tags',
   'submit',
 ]);
-
-const tagField = ref('');
-
-const removeTag = () => {};
 
 const titleModel = computed({
   get: () => props.title,
@@ -107,9 +112,17 @@ const categories = getCategories();
 const handleSubmit = () => {
   if (!contentModel.value) {
     $q.notify('내용을 작성해주세요. 🥲');
+    return;
   }
   emits('submit');
+  $q.notify('게시글이 성공적으로 작성되었습니다. 🌱');
 };
+
+const { addTag, removeTag } = useTag({
+  updateTags: tags => emits('update:tags', tags),
+  tags: toRef(props, 'tags'),
+  maxLengthMessage: '태그는 10개 이상 등록할 수 없습니다. ✏️',
+});
 </script>
 
 <style lang="scss" scoped></style>
