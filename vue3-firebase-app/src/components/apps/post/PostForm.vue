@@ -62,7 +62,9 @@ import { validateRequired } from 'src/utils/validate-rules';
 import TiptapEditor from '../../../components/tiptap/TiptapEditor.vue';
 import { useQuasar } from 'quasar';
 import { useTag } from '../../../composables/useTag';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const $q = useQuasar();
 const props = defineProps({
   title: {
@@ -115,7 +117,12 @@ const handleSubmit = () => {
     return;
   }
   emits('submit');
-  $q.notify('게시글이 성공적으로 작성되었습니다. 🌱');
+
+  if (!route.params.id) {
+    $q.notify('게시글이 성공적으로 작성되었습니다. 🌱');
+  } else {
+    $q.notify('수정이 완료되었습니다. 🥰');
+  }
 };
 
 const { addTag, removeTag } = useTag({

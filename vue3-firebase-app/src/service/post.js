@@ -10,6 +10,7 @@ import {
   query,
   where,
   orderBy,
+  updateDoc,
 } from 'firebase/firestore';
 
 export async function createPost(data) {
@@ -92,4 +93,11 @@ export async function getPost(id) {
     ...data,
     createdAt: data.createdAt?.toDate(),
   };
+}
+
+export async function updatePost(id, data) {
+  await updateDoc(doc(db, 'posts', id), {
+    ...data,
+    updatedAt: serverTimestamp(),
+  });
 }

@@ -28,7 +28,7 @@
 const getInitialForm = () => ({
   // 여기서 초기화
   title: '',
-  contents: '',
+  content: '',
   category: '',
   tags: [],
 });
