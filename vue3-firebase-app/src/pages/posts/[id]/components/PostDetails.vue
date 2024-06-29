@@ -8,6 +8,7 @@
         dense
         color="grey"
         size="16px"
+        @click="$router.back()"
       ></q-btn>
       <q-space></q-space>
       <q-btn
@@ -34,7 +35,9 @@
       </q-avatar>
       <div class="q-ml-md">
         <div>김단감</div>
-        <div class="text-grey-6">3일전</div>
+        <div class="text-grey-6">
+          {{ date.formatDate(post.createdAt, 'YYYY/MM/DD HH:mm:ss') }}
+        </div>
       </div>
       <q-space></q-space>
       <q-btn icon="more_horiz" round flat>
@@ -55,41 +58,52 @@
       </q-btn>
     </div>
 
-    <div class="g-mt-md text-h5 text-weight-bold">나는야 강아지 김단감!</div>
+    <div class="g-mt-md text-h5 text-weight-bold">{{ post?.title }}</div>
+    <div class="text-teal">
+      <span v-for="tag in post.tags" :key="tag">#{{ tag }}&nbsp;</span>
+      {{ post.category }}
+    </div>
     <div
       class="row items-center q-gutter-x-md q-mt-md justify-end"
       style="height: 27px"
     >
-      <PostIcon name="sym_o_visibility" label="1" tooltip="조회수" />
-      <PostIcon name="sym_o_sms" label="4" tooltip="댓글수" />
-      <PostIcon name="sym_o_favorite" label="2" tooltip="좋아요" />
-      <PostIcon name="sym_o_bookmark" label="3" tooltip="북마크" />
+      <PostIcon
+        name="sym_o_visibility"
+        :label="post.readCount"
+        tooltip="조회수"
+      />
+      <PostIcon name="sym_o_sms" :label="post.commentCount" tooltip="댓글수" />
+      <PostIcon
+        name="sym_o_favorite"
+        :label="post.likeCount"
+        tooltip="좋아요"
+      />
+      <PostIcon
+        name="sym_o_bookmark"
+        :label="post.bookmarkCount"
+        tooltip="북마크"
+      />
     </div>
     <q-separator class="q-my-lg" />
-    <div>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores aut
-      distinctio, corporis esse eveniet, totam non nisi dolorum quidem
-      consectetur, porro repudiandae doloremque. Doloribus iusto cupiditate
-      deserunt asperiores repellendus voluptatibus. Lorem ipsum dolor sit amet
-      consectetur adipisicing elit. Maiores aut distinctio, corporis esse
-      eveniet, totam non nisi dolorum quidem consectetur, porro repudiandae
-      doloremque. Doloribus iusto cupiditate deserunt asperiores repellendus
-      voluptatibus. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-      Maiores aut distinctio, corporis esse eveniet, totam non nisi dolorum
-      quidem consectetur, porro repudiandae doloremque. Doloribus iusto
-      cupiditate deserunt asperiores repellendus voluptatibus. Lorem ipsum dolor
-      sit amet consectetur adipisicing elit. Maiores aut distinctio, corporis
-      esse eveniet, totam non nisi dolorum quidem consectetur, porro repudiandae
-      doloremque. Doloribus iusto cupiditate deserunt asperiores repellendus
-      voluptatibus.
-    </div>
+    <TiptapViewer v-if="post.content" :content="post.content" />
   </BaseCard>
 </template>
 
 <script setup>
+import { date } from 'quasar';
+import { getPost } from '../../../../service/post';
+import { useAsyncState } from '@vueuse/core';
+import { useRoute } from 'vue-router';
 /* 컴포넌트 */
 import PostIcon from '../../../../components/apps/post/PostIcon.vue';
 import BaseCard from '../../../../components/base/BaseCard.vue';
+import TiptapViewer from '../../../../components/tiptap/TiptapViewer.vue';
+
+const route = useRoute();
+const { state: post, error } = useAsyncState(
+  () => getPost(route.params.id),
+  {},
+);
 </script>
 
 <style lang="scss" scoped></style>

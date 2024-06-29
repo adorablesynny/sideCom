@@ -6,6 +6,7 @@ import {
   setDoc,
   serverTimestamp,
   getDocs,
+  getDoc,
   query,
   where,
   orderBy,
@@ -77,4 +78,18 @@ export async function getPosts(params) {
   });
   console.log('posts', posts);
   return posts;
+}
+
+export async function getPost(id) {
+  const docSnap = await getDoc(doc(db, 'posts', id));
+
+  if (!docSnap.exists()) {
+    throw new Error('no such document.');
+  }
+
+  const data = docSnap.data();
+  return {
+    ...data,
+    createdAt: data.createdAt?.toDate(),
+  };
 }
