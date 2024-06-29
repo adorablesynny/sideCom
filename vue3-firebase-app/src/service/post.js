@@ -8,6 +8,7 @@ import {
   getDocs,
   query,
   where,
+  orderBy,
 } from 'firebase/firestore';
 
 export async function createPost(data) {
@@ -60,6 +61,9 @@ export async function getPosts(params) {
   }
   if (params?.tags && params?.tags.length > 0) {
     conditions.push(where('tags', 'array-contains-any', params?.tags));
+  }
+  if (params?.sort) {
+    conditions.push(orderBy(params.sort, 'desc'));
   }
   const q = query(collection(db, 'posts'), ...conditions);
   const querySnapshot = await getDocs(q);

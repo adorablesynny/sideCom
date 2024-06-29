@@ -51,6 +51,8 @@ const router = useRouter();
 const authStore = useAuthStore();
 const form = ref(getInitialForm()); // 여기 넣어줌
 
+const emits = defineEmits(['complete']);
+
 const onHide = () => {
   // form.value.title = '';  ...
   form.value = getInitialForm();
@@ -61,7 +63,8 @@ const { isLoading, execute } = useAsyncState(createPost, null, {
   immediate: false,
   throwError: true,
   onSuccess: postId => {
-    router.push(`/posts/${postId}`);
+    // router.push(`/posts/${postId}`);
+    emits('complete');
   },
 });
 // const handleSubmit = async () => {

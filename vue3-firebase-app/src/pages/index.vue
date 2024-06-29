@@ -4,7 +4,7 @@
       <PostLeftBar class="col-grow" v-model:category="params.category" />
 
       <section class="col-7">
-        <PostHeader />
+        <PostHeader v-model:sort="params.sort" />
         <PostList :items="posts" />
       </section>
 
@@ -14,7 +14,7 @@
         @open-write-dialog="openWriteDialog"
       />
     </div>
-    <PostWriteDialog v-model="postDialog" />
+    <PostWriteDialog v-model="postDialog" @complete="completeRegistPost" />
   </q-page>
 </template>
 
@@ -34,20 +34,13 @@ import PostWriteDialog from '../components/apps/post/PostWriteDialog.vue';
 const params = ref({
   category: null,
   tags: [],
+  sort: 'createdAt',
 });
 const router = useRouter();
 
 const goPostDetails = id => {
   router.push(`/posts/${id}`);
 };
-
-watch(
-  () => params,
-  newval => {
-    execute(0, params.value);
-  },
-  { deep: true },
-);
 
 // const posts = Array.from(Array(20), (_, index) => ({
 //   id: index + 1,
@@ -69,8 +62,25 @@ const openWriteDialog = () => {
 };
 
 const { state: posts, execute } = useAsyncState(getPosts, [], {
+  immediate: false,
   throwError: true,
 });
+
+watch(
+  () => params,
+  newval => {
+    execute(0, params.value);
+  },
+  {
+    deep: true,
+    immediate: true, // 이건 useAsyncState에서 써도 되지만 일관성을 위해 여기에 작성
+  },
+);
+
+const completeRegistPost = () => {
+  postDialog.value = false;
+  execute(0, params.value);
+};
 </script>
 
 <style lang="scss" scoped></style>
