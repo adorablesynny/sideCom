@@ -50,7 +50,7 @@
             >
               <q-item-section>수정하기</q-item-section>
             </q-item>
-            <q-item clickable v-close-popup>
+            <q-item @click="handleDeletePost" clickable v-close-popup>
               <q-item-section>삭제하기</q-item-section>
             </q-item>
           </q-list>
@@ -90,20 +90,40 @@
 </template>
 
 <script setup>
-import { date } from 'quasar';
-import { getPost } from '../../../../service/post';
+import { date, useQuasar } from 'quasar';
+import { getPost, deletePost } from '../../../../service/post';
 import { useAsyncState } from '@vueuse/core';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 /* 컴포넌트 */
 import PostIcon from '../../../../components/apps/post/PostIcon.vue';
 import BaseCard from '../../../../components/base/BaseCard.vue';
 import TiptapViewer from '../../../../components/tiptap/TiptapViewer.vue';
 
 const route = useRoute();
+const router = useRouter();
+const $q = useQuasar();
 const { state: post, error } = useAsyncState(
   () => getPost(route.params.id),
   {},
 );
+
+const { execute: executeDeletePost } = useAsyncState(
+  deletePost,
+  {},
+  {
+    immediate: false,
+    onSuccess: () => {
+      $q.notify('삭제가 완료되었습니다. 🤚');
+      router.push('/');
+    },
+  },
+);
+const handleDeletePost = async () => {
+  if (confirm('삭제 하시겠습니까?') === false) {
+    return;
+  }
+  await executeDeletePost(0, route.params.id);
+};
 </script>
 
 <style lang="scss" scoped></style>

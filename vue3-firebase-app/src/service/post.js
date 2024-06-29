@@ -101,3 +101,7 @@ export async function updatePost(id, data) {
     updatedAt: serverTimestamp(),
   });
 }
+
+export async function deletePost(id) {
+  await deleteDoc(doc(db, 'posts', id));
+}
