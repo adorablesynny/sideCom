@@ -5,7 +5,14 @@
 
       <section class="col-7">
         <PostHeader v-model:sort="params.sort" />
-        <PostList :items="posts" />
+        <PostList :items="items" />
+        <q-btn
+          v-if="isLoadMore"
+          class="full-width q-mt-md"
+          label="더보기"
+          outline
+          @click="loadMore"
+        />
       </section>
 
       <PostRightBar
@@ -35,6 +42,7 @@ const params = ref({
   category: null,
   tags: [],
   sort: 'createdAt',
+  limit: 2,
 });
 const router = useRouter();
 
@@ -60,15 +68,29 @@ const postDialog = ref(false);
 const openWriteDialog = () => {
   postDialog.value = true;
 };
+const items = ref([]);
+const start = ref(null);
+const isLoadMore = ref(true);
 
-const { state: posts, execute } = useAsyncState(getPosts, [], {
+const { execute } = useAsyncState(getPosts, [], {
   immediate: false,
   throwError: true,
+  onSuccess: result => {
+    if (start.value) {
+      items.value = items.value.concat(result.items); // 더보기라면
+    } else {
+      items.value = result.items;
+    }
+    isLoadMore.value = result.items.length >= params.value.limit;
+    start.value = result.lastItem;
+  },
 });
 
 watch(
   () => params,
   newval => {
+    // 카테고리나 정렬이 바뀐다면
+    start.value = null;
     execute(0, params.value);
   },
   {
@@ -80,6 +102,10 @@ watch(
 const completeRegistPost = () => {
   postDialog.value = false;
   execute(0, params.value);
+};
+
+const loadMore = () => {
+  execute(0, { ...params.value, start: start.value });
 };
 </script>
 

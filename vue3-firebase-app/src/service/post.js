@@ -11,6 +11,8 @@ import {
   where,
   orderBy,
   updateDoc,
+  startAfter,
+  limit,
 } from 'firebase/firestore';
 
 export async function createPost(data) {
@@ -67,6 +69,12 @@ export async function getPosts(params) {
   if (params?.sort) {
     conditions.push(orderBy(params.sort, 'desc'));
   }
+  if (params?.start) {
+    conditions.push(startAfter(params.start));
+  }
+  if (params?.limit) {
+    conditions.push(limit(params.limit));
+  }
   const q = query(collection(db, 'posts'), ...conditions);
   const querySnapshot = await getDocs(q);
   const posts = querySnapshot.docs.map(docs => {
@@ -77,8 +85,11 @@ export async function getPosts(params) {
       createdAt: data.createdAt?.toDate(),
     };
   });
-  console.log('posts', posts);
-  return posts;
+  const lastestDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+  return {
+    items: posts,
+    lastItem: lastestDoc,
+  };
 }
 
 export async function getPost(id) {
