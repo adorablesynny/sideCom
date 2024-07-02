@@ -11,11 +11,11 @@ export function formatRelativeTime(targetTime = new Date('2024-07-02')) {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
   const years = Math.floor(days / 365);
-  console.log(seconds);
-  console.log(minutes);
-  console.log(hours);
-  console.log(days);
-  console.log(years);
+  // console.log(seconds);
+  // console.log(minutes);
+  // console.log(hours);
+  // console.log(days);
+  // console.log(years);
 
   if (years > 0) {
     return rtf.format(-1 * years, 'year');

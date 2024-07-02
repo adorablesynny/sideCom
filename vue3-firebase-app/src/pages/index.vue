@@ -6,13 +6,14 @@
       <section class="col-7">
         <PostHeader v-model:sort="params.sort" />
         <PostList :items="items" />
-        <q-btn
+        <!-- <q-btn
           v-if="isLoadMore"
           class="full-width q-mt-md"
           label="더보기"
           outline
           @click="loadMore"
-        />
+        /> -->
+        <div v-intersection-observer="handleIntersectionObserver"></div>
       </section>
 
       <PostRightBar
@@ -31,6 +32,7 @@ import { ref, watch, watchEffect } from 'vue';
 import { getPosts } from '../service/post';
 import { useAsyncState } from '@vueuse/core';
 import { formatRelativeTime } from '../utils/relative-time-format';
+import { vIntersectionObserver } from '@vueuse/components';
 
 /* 컴포너트  */
 import PostList from '../components/apps/post/PostList.vue';
@@ -44,7 +46,7 @@ const params = ref({
   category: null,
   tags: [],
   sort: 'createdAt',
-  limit: 4,
+  limit: 7,
 });
 const router = useRouter();
 
@@ -97,7 +99,7 @@ watch(
   },
   {
     deep: true,
-    immediate: true, // 이건 useAsyncState에서 써도 되지만 일관성을 위해 여기에 작성
+    // immediate: true, // 이건 useAsyncState에서 써도 되지만 일관성을 위해 여기에 작성
   },
 );
 
@@ -109,6 +111,21 @@ const completeRegistPost = () => {
 
 const loadMore = () => {
   execute(0, { ...params.value, start: start.value });
+};
+
+// const vIntersectionObserver = {
+//   beforeMount: (el, binding) => {
+//     const observer = new IntersectionObserver(binding.value);
+//     observer.observe(el);
+//   },
+// };
+
+const handleIntersectionObserver = ([{ isIntersecting }]) => {
+  if (isIntersecting && isLoadMore.value) {
+    //화면에 보일 때
+    console.log('### 화면에 노출');
+    loadMore();
+  }
 };
 </script>
 

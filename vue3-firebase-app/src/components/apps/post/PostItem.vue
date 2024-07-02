@@ -69,7 +69,7 @@
 
 <script setup>
 import { date } from 'quasar';
-import { formatRelativeTime } from '.././../../utils/relative-time-format';
+import { formatRelativeTime } from '../../../utils/relative-time-format';
 
 /* 컴포넌트 */
 import PostIcon from './PostIcon.vue';
