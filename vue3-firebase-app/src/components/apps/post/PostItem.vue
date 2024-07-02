@@ -9,9 +9,7 @@
     <q-item-section>
       <div class="flex items-center">
         <span
-          >김단감&nbsp;&middot;&nbsp;{{
-            date.formatDate(createdAt, 'YYYY/MM/DD HH:mm:ss')
-          }}</span
+          >김단감&nbsp;&middot;&nbsp;{{ formatRelativeTime(createdAt) }}</span
         >
         <q-chip
           class="q-ml-smw"
@@ -71,6 +69,8 @@
 
 <script setup>
 import { date } from 'quasar';
+import { formatRelativeTime } from '.././../../utils/relative-time-format';
+
 /* 컴포넌트 */
 import PostIcon from './PostIcon.vue';
 

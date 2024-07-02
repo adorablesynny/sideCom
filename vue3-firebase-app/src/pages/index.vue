@@ -30,6 +30,7 @@ import { useRouter } from 'vue-router';
 import { ref, watch, watchEffect } from 'vue';
 import { getPosts } from '../service/post';
 import { useAsyncState } from '@vueuse/core';
+import { formatRelativeTime } from '../utils/relative-time-format';
 
 /* 컴포너트  */
 import PostList from '../components/apps/post/PostList.vue';
@@ -38,11 +39,12 @@ import PostLeftBar from './components/PostLeftBar.vue';
 import PostRightBar from './components/PostRightBar.vue';
 import PostWriteDialog from '../components/apps/post/PostWriteDialog.vue';
 
+const time = formatRelativeTime();
 const params = ref({
   category: null,
   tags: [],
   sort: 'createdAt',
-  limit: 2,
+  limit: 4,
 });
 const router = useRouter();
 
@@ -101,6 +103,7 @@ watch(
 
 const completeRegistPost = () => {
   postDialog.value = false;
+  start.value = null;
   execute(0, params.value);
 };
 
