@@ -1,15 +1,20 @@
 import { boot } from 'quasar/wrappers';
 import { useAuthStore } from '../stores/auth';
 import { storeToRefs } from 'pinia';
+import { useQuasar } from 'quasar';
 
 function requiresAuth(to) {
+  const $q = useQuasar();
   const { isAuthenticated } = storeToRefs(useAuthStore());
 
   if (
     to.matched.some(record => record.meta.requiresAuth) &&
     !isAuthenticated.value
   ) {
-    alert('로그인이 필요한 페이지입니다.');
+    $q.notify({
+      message: '로그인 후 이용할 수 있습니다.',
+      color: 'negative',
+    });
     return '/';
   }
   return true; //생략가능

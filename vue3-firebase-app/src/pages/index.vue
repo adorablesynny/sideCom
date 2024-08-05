@@ -34,6 +34,8 @@ import { useAsyncState } from '@vueuse/core';
 import { vIntersectionObserver } from '@vueuse/components';
 // import { formatRelativeTime } from '../utils/relative-time-format';
 import { usePostQuery } from '../composables/usePostQuery';
+import { useAuthStore } from '../stores/auth';
+import { useQuasar } from 'quasar';
 
 /* 컴포너트  */
 import PostList from '../components/apps/post/PostList.vue';
@@ -43,6 +45,9 @@ import PostRightBar from './components/PostRightBar.vue';
 import PostWriteDialog from '../components/apps/post/PostWriteDialog.vue';
 
 // const time = formatRelativeTime();
+
+const authStore = useAuthStore();
+const $q = useQuasar();
 
 const { category, sort, tags } = usePostQuery();
 const params = computed(() => ({
@@ -73,7 +78,13 @@ const goPostDetails = id => {
 
 const postDialog = ref(false);
 const openWriteDialog = () => {
-  postDialog.value = true;
+  if (!authStore.isAuthenticated) {
+    $q.notify({
+      message: '로그인 후 이용해주세요.',
+      color: 'negative',
+    });
+    return;
+  } else postDialog.value = true;
 };
 const items = ref([]);
 const start = ref(null);

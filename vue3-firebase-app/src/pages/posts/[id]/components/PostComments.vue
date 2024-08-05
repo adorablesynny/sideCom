@@ -61,11 +61,19 @@ import BaseCard from 'src/components/base/BaseCard.vue';
 
 const route = useRoute();
 const isActive = ref(false);
-const toggleActive = () => {
-  isActive.value = !isActive.value;
-};
-
+const $q = useQuasar();
 const authStore = useAuthStore();
+const toggleActive = () => {
+  if (!isActive.value) {
+    if (!authStore.isAuthenticated) {
+      $q.notify({
+        message: '로그인 후 이용해주세요.',
+        color: 'negative',
+      });
+      return;
+    } else isActive.value = !isActive.value;
+  }
+};
 
 const { state: comments, execute: executeGetComments } = useAsyncState(
   () => getComments(route.params.id),

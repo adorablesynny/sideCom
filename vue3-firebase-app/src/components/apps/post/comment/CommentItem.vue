@@ -19,7 +19,7 @@
       </div></q-item-section
     >
 
-    <q-item-section side top>
+    <q-item-section v-if="hasOwnContent(uid)" side top>
       <q-btn
         icon="sym_o_delete"
         flat
@@ -34,7 +34,9 @@
 
 <script setup>
 import { date } from 'quasar';
+import { useAuthStore } from '../../../../stores/auth';
 
+const { hasOwnContent } = useAuthStore();
 const props = defineProps({
   id: {
     type: String,
