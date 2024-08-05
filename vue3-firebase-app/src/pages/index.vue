@@ -1,10 +1,10 @@
 <template>
   <q-page padding>
     <div class="row q-col-gutter-x-lg">
-      <PostLeftBar class="col-grow" v-model:category="params.category" />
+      <PostLeftBar class="col-grow" v-model:category="category" />
 
       <section class="col-7">
-        <PostHeader v-model:sort="params.sort" />
+        <PostHeader v-model:sort="sort" />
         <PostList :items="items" />
         <!-- <q-btn
           v-if="isLoadMore"
@@ -18,7 +18,7 @@
 
       <PostRightBar
         class="col-3"
-        v-model:tags="params.tags"
+        v-model:tags="tags"
         @open-write-dialog="openWriteDialog"
       />
     </div>
@@ -28,11 +28,12 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref, watch, watchEffect } from 'vue';
+import { computed, ref, watch, watchEffect } from 'vue';
 import { getPosts } from '../service/post';
 import { useAsyncState } from '@vueuse/core';
-import { formatRelativeTime } from '../utils/relative-time-format';
 import { vIntersectionObserver } from '@vueuse/components';
+// import { formatRelativeTime } from '../utils/relative-time-format';
+import { usePostQuery } from '../composables/usePostQuery';
 
 /* 컴포너트  */
 import PostList from '../components/apps/post/PostList.vue';
@@ -41,13 +42,15 @@ import PostLeftBar from './components/PostLeftBar.vue';
 import PostRightBar from './components/PostRightBar.vue';
 import PostWriteDialog from '../components/apps/post/PostWriteDialog.vue';
 
-const time = formatRelativeTime();
-const params = ref({
-  category: null,
-  tags: [],
-  sort: 'createdAt',
+// const time = formatRelativeTime();
+
+const { category, sort, tags } = usePostQuery();
+const params = computed(() => ({
+  category: category.value,
+  tags: tags.value,
+  sort: sort.value,
   limit: 7,
-});
+}));
 const router = useRouter();
 
 const goPostDetails = id => {
