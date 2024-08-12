@@ -1,6 +1,6 @@
 <template>
   <q-list bordered separator>
-    <PostItem v-for="item in items" v-bind="item" />
+    <PostItem v-for="item in items" :item="item" />
   </q-list>
 </template>
 

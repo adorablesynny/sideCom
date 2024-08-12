@@ -1,5 +1,5 @@
 <template>
-  <q-item class="bg-white q-pt-md" clickable :to="`/posts/${id}`">
+  <q-item class="bg-white q-pt-md" clickable :to="`/posts/${item.id}`">
     <q-item-section avatar top>
       <q-avatar>
         <img src="https://cdn.quasar.dev/img/boy-avatar.png" alt="" />
@@ -9,7 +9,9 @@
     <q-item-section>
       <div class="flex items-center">
         <span
-          >김단감&nbsp;&middot;&nbsp;{{ formatRelativeTime(createdAt) }}</span
+          >김단감&nbsp;&middot;&nbsp;{{
+            formatRelativeTime(item.createdAt)
+          }}</span
         >
         <q-chip
           class="q-ml-smw"
@@ -17,34 +19,40 @@
           text-color="white"
           style="height: 1.3rem"
         >
-          {{ category }}
+          {{ item.category }}
         </q-chip>
       </div>
-      <div class="text-h6 q-mt-sm">{{ title }}</div>
+      <div class="text-h6 q-mt-sm">{{ item.title }}</div>
       <div class="text-primary text-caption">
-        <span v-for="tag in tags" :key="tag" class="q-mr-sm">#{{ tag }}</span>
+        <span v-for="tag in item.tags" :key="tag" class="q-mr-sm"
+          >#{{ item.tag }}</span
+        >
       </div>
-      <div class="text-grey-6 q-my-sm ellipsis-2-lines">{{ content }}</div>
+      <div class="text-grey-6 q-my-sm ellipsis-2-lines">{{ item.content }}</div>
       <div class="row items-center" style="height: 27px">
         <div class="col-3">
           <div class="flex flex-center">
             <PostIcon
               name="sym_o_visibility"
-              :label="readCount"
+              :label="item.readCount"
               tooltip="조회수"
             />
           </div>
         </div>
         <div class="col-3">
           <div class="flex flex-center">
-            <PostIcon name="sym_o_sms" :label="commentCount" tooltip="댓글수" />
+            <PostIcon
+              name="sym_o_sms"
+              :label="item.commentCount"
+              tooltip="댓글수"
+            />
           </div>
         </div>
         <div class="col-3">
           <div class="flex flex-center">
-            <q-btn class="full-width" flat dense @click.prevent>
+            <q-btn class="full-width" flat dense @click.prevent="toggleLike">
               <PostIcon
-                name="sym_o_favorite"
+                :name="isLike ? 'favorite' : 'sym_o_favorite'"
                 :label="likeCount"
                 tooltip="좋아요"
               />
@@ -56,7 +64,7 @@
             <q-btn class="full-width" flat dense @click.prevent>
               <PostIcon
                 name="sym_o_bookmark"
-                :label="bookmarkCount"
+                :label="item.bookmarkCount"
                 tooltip="북마크"
               />
             </q-btn>
@@ -70,43 +78,26 @@
 <script setup>
 import { date } from 'quasar';
 import { formatRelativeTime } from '../../../utils/relative-time-format';
+import { addLike, hasLike, removeLike } from '../../../service/post';
+import { useAuthStore } from '../../../stores/auth';
+import { storeToRefs } from 'pinia';
+import { toRefs, ref, watch } from 'vue';
+import { useLike } from '../../../composables/useLike';
 
 /* 컴포넌트 */
 import PostIcon from './PostIcon.vue';
 
 const props = defineProps({
-  title: String,
-  id: [Number, String],
-  content: String,
-  readCount: {
-    type: Number,
-    default: 0,
+  item: {
+    type: Object,
+    default: () => ({}),
   },
-  commentCount: {
-    type: Number,
-    default: 0,
-  },
-  likeCount: {
-    type: Number,
-    default: 0,
-  },
-  bookmarkCount: {
-    type: Number,
-    default: 0,
-  },
-  category: {
-    type: String,
-  },
-  createdAt: {
-    type: Date,
-  },
-  tags: {
-    type: Array,
-    default: () => [], // 디폴트로는 빈 배열
-  },
-  uid: {
-    type: String,
-  },
+});
+
+const { uid, isAuthenticated } = storeToRefs(useAuthStore());
+
+const { isLike, likeCount, toggleLike } = useLike(props.item.id, {
+  initialCount: props.item.likeCount,
 });
 </script>
 

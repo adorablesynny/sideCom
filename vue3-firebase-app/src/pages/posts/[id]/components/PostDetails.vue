@@ -12,12 +12,13 @@
       ></q-btn>
       <q-space></q-space>
       <q-btn
-        icon="sym_o_ favorite"
+        :icon="isLike ? 'favorite' : 'sym_o_favorite'"
         flat
         round
         dense
         color="red"
         size="16px"
+        @click="toggleLike"
       ></q-btn>
       <q-btn
         icon="sym_o_bookmark"
@@ -73,11 +74,7 @@
         tooltip="조회수"
       />
       <PostIcon name="sym_o_sms" :label="post.commentCount" tooltip="댓글수" />
-      <PostIcon
-        name="sym_o_favorite"
-        :label="post.likeCount"
-        tooltip="좋아요"
-      />
+      <PostIcon name="sym_o_favorite" :label="likeCount" tooltip="좋아요" />
       <PostIcon
         name="sym_o_bookmark"
         :label="post.bookmarkCount"
@@ -95,6 +92,7 @@ import { getPost, deletePost } from '../../../../service/post';
 import { useAsyncState } from '@vueuse/core';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '../../../../stores/auth';
+import { useLike } from '../../../../composables/useLike';
 
 /* 컴포넌트 */
 import PostIcon from '../../../../components/apps/post/PostIcon.vue';
@@ -108,6 +106,7 @@ const { hasOwnContent } = useAuthStore();
 const { state: post, error } = useAsyncState(
   () => getPost(route.params.id),
   {},
+  { onSuccess: result => updateLikeCount(result.likeCount) },
 );
 
 const { execute: executeDeletePost } = useAsyncState(
@@ -127,6 +126,10 @@ const handleDeletePost = async () => {
   }
   await executeDeletePost(0, route.params.id);
 };
+
+const { isLike, likeCount, toggleLike, updateLikeCount } = useLike(
+  route.params.id,
+);
 </script>
 
 <style lang="scss" scoped></style>
