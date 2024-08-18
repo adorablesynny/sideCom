@@ -7,6 +7,7 @@ import { getUserBookmark } from 'src/service/post';
 import PostList from 'src/components/apps/post/PostList.vue';
 import { useAuthStore } from '../../stores/auth';
 import { ref } from 'vue';
+import { useAsyncState } from '@vueuse/core';
 
 const authStore = useAuthStore();
 
@@ -23,9 +24,8 @@ const authStore = useAuthStore();
 //   tags: ['html', 'css', 'javaSciprt'],
 //   uid: '김단감',
 // }));
-
 const posts = ref([]);
-getUserBookmark(authStore.uid).then(result => (posts.value = result));
+const { state: item } = useAsyncState(() => getUserBookmark(authStore.uid));
 </script>
 
 <style lang="scss" scoped></style>
