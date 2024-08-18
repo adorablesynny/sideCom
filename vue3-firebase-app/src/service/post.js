@@ -102,6 +102,7 @@ export async function getPost(id) {
 
   const data = docSnap.data();
   return {
+    id: docSnap.id,
     ...data,
     createdAt: data.createdAt?.toDate(),
   };
@@ -139,4 +140,32 @@ export async function removeLike(uid, postId) {
 export async function hasLike(uid, postId) {
   const docSnap = await getDoc(doc(db, 'post_likes', `${uid}_${postId}`));
   return docSnap.exists(); // 있으면 true, 없으면 false 반환
+}
+
+export async function addBookmark(uid, postId) {
+  await setDoc(doc(db, 'users', uid, 'bookmarks', postId), {
+    createdAt: serverTimestamp(),
+  });
+}
+
+export async function removeBookmark(uid, postId) {
+  await deleteDoc(doc(db, 'users', uid, 'bookmarks', postId));
+}
+
+export async function hasBookmark(uid, postId) {
+  const docSnap = await getDoc(doc(db, 'users', uid, 'bookmarks', postId));
+  return docSnap.exists();
+}
+
+export async function getUserBookmark(uid) {
+  const q = query(
+    collection(db, 'users', uid, 'bookmarks'),
+    orderBy('createdAt', 'desc'),
+    limit(6),
+  );
+  const querySnapshot = await getDocs(q);
+
+  return Promise.all(
+    querySnapshot.docs.map(bookmarkDoc => getPost(bookmarkDoc.id)),
+  );
 }

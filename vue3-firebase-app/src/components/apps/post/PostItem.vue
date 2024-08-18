@@ -25,7 +25,7 @@
       <div class="text-h6 q-mt-sm">{{ item.title }}</div>
       <div class="text-primary text-caption">
         <span v-for="tag in item.tags" :key="tag" class="q-mr-sm"
-          >#{{ item.tag }}</span
+          >#{{ tag }}</span
         >
       </div>
       <div class="text-grey-6 q-my-sm ellipsis-2-lines">{{ item.content }}</div>
@@ -61,10 +61,15 @@
         </div>
         <div class="col-3">
           <div class="flex flex-center">
-            <q-btn class="full-width" flat dense @click.prevent>
+            <q-btn
+              class="full-width"
+              flat
+              dense
+              @click.prevent="toggleBookmark"
+            >
               <PostIcon
-                name="sym_o_bookmark"
-                :label="item.bookmarkCount"
+                :name="isBookmark ? 'bookmark' : 'sym_o_bookmark'"
+                :label="bookmarkCount"
                 tooltip="북마크"
               />
             </q-btn>
@@ -83,6 +88,7 @@ import { useAuthStore } from '../../../stores/auth';
 import { storeToRefs } from 'pinia';
 import { toRefs, ref, watch } from 'vue';
 import { useLike } from '../../../composables/useLike';
+import { useBookmark } from '../../../composables/useBookmark';
 
 /* 컴포넌트 */
 import PostIcon from './PostIcon.vue';
@@ -99,6 +105,13 @@ const { uid, isAuthenticated } = storeToRefs(useAuthStore());
 const { isLike, likeCount, toggleLike } = useLike(props.item.id, {
   initialCount: props.item.likeCount,
 });
+
+const { isBookmark, bookmarkCount, toggleBookmark } = useBookmark(
+  props.item.id,
+  {
+    initialCount: props.item.bookmarkCount,
+  },
+);
 </script>
 
 <style lang="scss" scoped></style>
