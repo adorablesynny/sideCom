@@ -87,8 +87,9 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { date, useQuasar } from 'quasar';
-import { getPost, deletePost } from '../../../../service/post';
+import { getPost, deletePost, getPostDetails } from '../../../../service/post';
 import { useAsyncState } from '@vueuse/core';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '../../../../stores/auth';
@@ -103,10 +104,17 @@ const route = useRoute();
 const router = useRouter();
 const $q = useQuasar();
 const { hasOwnContent } = useAuthStore();
-const { state: post, error } = useAsyncState(
-  () => getPost(route.params.id),
+
+const post = ref({});
+const { error } = useAsyncState(
+  () => getPostDetails(route.params.id),
   {},
-  { onSuccess: result => updateLikeCount(result.likeCount) },
+  {
+    onSuccess: result => {
+      post.value = result.post;
+      updateLikeCount(result.post.likeCount);
+    },
+  },
 );
 
 const { execute: executeDeletePost } = useAsyncState(
