@@ -89,8 +89,9 @@
 <script setup>
 import { ref } from 'vue';
 import { date, useQuasar } from 'quasar';
-import { getPost, deletePost, getPostDetails } from '../../../../service/post';
 import { useAsyncState } from '@vueuse/core';
+import { getPost, deletePost, getPostDetails } from '../../../../service/post';
+
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '../../../../stores/auth';
 import { useLike } from '../../../../composables/useLike';

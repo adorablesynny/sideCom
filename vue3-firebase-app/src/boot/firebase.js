@@ -6,6 +6,7 @@ import { getAnalytics } from 'firebase/analytics';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useAuthStore } from '../stores/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -26,8 +27,9 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
-export { auth, db };
+export { auth, db, storage };
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
 export default boot(async (/* { app, router, ... } */) => {
